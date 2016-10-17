@@ -187,21 +187,16 @@ should_send_data(1.0) ->
 should_send_data(SampleRate) ->
   random_uniform() =< SampleRate.
 
--ifdef(rand_module).
-random_uniform() ->
-    rand:uniform().
--else.
 random_uniform() ->
     ok = maybe_seed(),
-    random:uniform().
+    rand_compat:uniform().
 maybe_seed() ->
   _ = case erlang:get(random_seed) of
-    undefined -> random:seed(os:timestamp());
-    {R, R, R} -> random:seed(os:timestamp());
+    undefined -> rand_compat:seed(os:timestamp());
+    {R, R, R} -> rand_compat:seed(os:timestamp());
     _ -> ok
   end,
   ok.
--endif.
 
 -spec create_event(katja:event()) -> riemannpb_event().
 create_event(Data) ->

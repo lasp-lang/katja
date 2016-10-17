@@ -25,14 +25,6 @@ TEST_ERLC_OPTS ?= +debug_info +warn_bif_clash +warn_deprecated_function +warn_de
 otp_release = $(shell erl -noshell -eval 'io:format("~s", [erlang:system_info(otp_release)]), init:stop()')
 
 # The rand module was introduced in OTP 18. This variable should be 0 if OTP
-# version < 18, and 1 otherwise.
-rand_module = $(shell echo $(otp_release) | grep -q -E "^17$$|^R" ; echo $$?)
-
-ifeq ($(rand_module),1)
-	ERLC_OPTS += -Drand_module=1
-	TEST_ERLC_OPTS += -Drand_module=1
-endif
-
 CT_SUITES = eunit connection writer reader
 CT_OPTS = -ct_hooks nifoc_ct_hook [] -cover ./test/cover.spec
 
